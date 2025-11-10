@@ -25,7 +25,7 @@ Documentation
 
 Documentation for this project is hosted on
 `GitHub Pages
-<https://grscheller.github.io/boring-math/probability-distributions/development/build/html/>`_.
+<https://grscheller.github.io/boring-math/probability-distributions>`_.
 
 Copyright and License
 ---------------------
