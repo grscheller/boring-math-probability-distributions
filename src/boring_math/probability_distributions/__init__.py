@@ -1,4 +1,4 @@
-# Copyright 2024-2025 Geoffrey R. Scheller
+# Copyright 2024-2026 Geoffrey R. Scheller
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,30 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Visualize probability distributions
+"""
+Probability Distributions
+-------------------------
 
-Distributions can be compared to either sample or population data. Package
-originally derived from a Udacity exercise.
+..admonition:: Visualize probability distributions
 
-- Class Dataset
+    Distributions can be compared to either sample or population
+    data. Package originally derived from a Udacity exercise.
 
-  - boring_math.probability_distributions.dataset
+.. note::
 
-    - contains either sample or population data
-    - generates sample/population statistics
+    **Module overview:**
 
-- Abstract Class Distribution
+    - boring_math.probability_distributions.dataset
 
-  - boring_math.probability_distributions.distribution
+      - Class **Dataset**
 
-    - represents a probability distribution
+        - contains either sample or population data
+        - generates sample/population statistics
 
-- Concrete Distributions
+    - boring_math.probability_distributions.distribution
 
-  - bm.probability_distributions.distributions
+      - Abstract Class **Distribution**
+
+        - represents a probability distribution
+
+      - bm.probability_distributions.distributions
+
+        - Concrete **Distributions**
 
 """
 
 __author__ = 'Geoffrey R. Scheller'
-__copyright__ = 'Copyright (c) 2024-2025 Geoffrey R. Scheller'
+__copyright__ = 'Copyright (c) 2024-2026 Geoffrey R. Scheller'
 __license__ = 'Apache License 2.0'
