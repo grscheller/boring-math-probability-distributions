@@ -72,9 +72,14 @@ class Normal(ContDist):
         return 0.5 * (1 + erf((x - mu) / c))
 
     def __add__(self, other: Self) -> Self:
-        """Add together two Normal distributions."""
+        """Add together two Normal distributions.
+
+        Normal distributions are stable, thus the sum of two
+        is another Normal distribution.
+
+        """
         if type(other) is not Normal:
-            msg = 'A Normal distribution cannot be added to a {}'
+            msg = 'A Normal distribution added to a {} distribution is not Normal.'
             msg = msg.format(type(other))
             raise TypeError(msg)
 

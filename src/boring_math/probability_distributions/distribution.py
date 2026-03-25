@@ -26,7 +26,7 @@ Providing base classes to visualize probability distributions.
 """
 
 from abc import ABC, abstractmethod
-from typing import Self, Never
+from typing import Self
 # import matplotlib.pyplot as plt
 from .datasets import DataSet
 from pythonic_fp.fptools.maybe import MayBe
@@ -52,7 +52,7 @@ class ContDist(ABC):
         ...
 
     @abstractmethod
-    def __add__(self, other: Self) -> Self | Never:
+    def __add__(self, other: Self) -> Self:
         """Add together two compatible distributions."""
         ...
 
