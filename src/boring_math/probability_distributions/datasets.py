@@ -69,16 +69,16 @@ class DataSet:
                         line = file.readline()
                     else:
                         line = file.readline()
-        except ValueError as esc:
-            raise RuntimeError('Error parsing "{}"'.format(file_name)) from esc
-        except FileNotFoundError as esc:
+        except ValueError as exc:
+            raise RuntimeError('Error parsing "{}"'.format(file_name)) from exc
+        except FileNotFoundError as exc:
             raise RuntimeError(
                 'Can\'t find file data file "{}"'.format(file_name)
-            ) from esc
-        except PermissionError as esc:
+            ) from exc
+        except PermissionError as exc:
             raise RuntimeError(
                 'No read permissiona for data file "{}"'.format(file_name)
-            ) from esc
+            ) from exc
         else:
             return MayBe(DataSet(*data, sample=sample))
 
