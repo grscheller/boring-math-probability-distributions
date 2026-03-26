@@ -17,9 +17,7 @@
 #
 
 from typing import final, Self
-from boring_math.special_functions.beta import beta
-from boring_math.special_functions.constants import pi
-from math import erf, exp, sqrt
+from boring_math.special_functions.beta import beta_real
 # import matplotlib.pyplot as plt
 # from ..datasets import DataSet
 from ..distribution import ContDist
@@ -34,7 +32,7 @@ class Beta(ContDist):
     .. note::
 
         The Beta distribution is a continuous probability distribution
-        defined on ``[0, 1]`` with probability density function
+        defined on ``(0, 1)`` with probability density function
 
         ``f(x) = xᵅ⁻¹(1-x)ᵝ⁻¹/B(α,β)`` for α,β > 0
 
@@ -73,8 +71,8 @@ class Beta(ContDist):
 
         α = self.α
         β = self.β
-        B_α_β = beta(α, β).real
-        return x**(α-1) * (1-x)**(β-1) / B_α_β 
+        val: float = x**(α-1) * (1-x)**(β-1) / beta_real(α, β)
+        return val
 
     def cdf(self, x: float) -> float:
         """Beta cumulative probability distribution function."""
@@ -83,8 +81,8 @@ class Beta(ContDist):
     def __add__(self, other: Self) -> Self:
         """Fail if two Beta distributions are added.
 
-        Beta distributions are not stable, thus the sum of two
-        is not a Beta distribution.
+        Beta distributions are not stable, thus the sum of two random
+        beta distributed variables is not Beta distributed.
 
         """
         if type(other) is Beta:
