@@ -1,4 +1,4 @@
-# Copyright 2024-2026 Geoffrey R. Scheller
+# Copyright 2026 Geoffrey R. Scheller
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,100 +17,91 @@
 #
 
 """
-Binomial Distribution
----------------------
+Poisson Distribution
+--------------------
 
-A binomial distribution class, derived from a Udacity
-exercise template.
+A Poisson distribution class.
 
 """
 
 from typing import final, Self
-from math import comb, sqrt
+from math import floor, ceil, factorial as fac, sqrt
 import matplotlib.pyplot as plt
+from boring_math.special_functions.exponential import exp
 from ..datasets import DataSet
 from ..distribution import DiscreteDist
 
-__all__ = ['Binomial']
+__all__ = ['Poisson']
 
 
 @final
-class Binomial(DiscreteDist):
-    """Class for visualizing Binomial distributed data.
+class Poisson(DiscreteDist):
+    """Class for visualizing Poisson distributed data.
 
-    A Binomial distribution represents the number of events with
-    probability ``p`` happening in ``n`` numbers of trials.
+    A Poisson distribution that expresses the probability of a given number of events
+    occurring in a fixed interval of time if these events occur with a known constant
+    mean rate and independently of the time since the last event.
 
     Attributes (some inherited):
 
     - ``mean`` (float) representing the mean value of the distribution
     - ``stdev`` (float) representing the standard deviation of the distribution
     - ``data``  extracted from a data file (taken to be a population)
-    - ``p`` (float) representing the probability of an event occurring
-    - ``n`` (int) the total number of trials
+    - ``λ`` (float) number of events in an interval
 
     """
 
-    def __init__(self, p: float = 0.5, n: int = 20):
-        if not (0.0 <= p <= 1.0) or n < 1:
-            msg1 = 'For a Binomial distribution, '
-            msg2 = msg3 = ''
-            if not (0.0 <= p <= 1.0):
-                msg2 = '0 <= p <= 1'
-            if n < 0:
-                msg3 = 'the number of trials n must be non-negative'
-            if msg2 and msg3:
-                msg = msg1 + msg2 + ' and ' + msg3 + '.'
-            else:
-                msg = msg1 + msg2 + msg3 + '.'
+    def __init__(self, λ: float = 1.0):
+        if (λ <= 0.0):
+            msg = 'For a Poisson distribution, λ is assumed positive'
             raise ValueError(msg)
 
-        self.p: float = p
-        self.n: int = n
+        self.λ: float = λ
+        self.mean: float = λ
+        self.stdev: float = λ
 
         super().__init__()
 
     def pdf(self, kf: float) -> float:
-        """Binomial probability distribution function."""
-        k = int(kf)
-        n = self.n
-        p = self.p
-        return comb(n, k) * (p**k) * (1 - p) ** (n - k)
+        """Poisson probability distribution function."""
+        k = floor(kf)
+        λ = self.λ
+        if k < 0:
+            return 0.0
+        return λ**k * exp(-λ) / fac(k)
 
     def cdf(self, kf: float) -> float:
         """Binomial cumulative probability distribution function."""
-        return sum((self.pdf(ii) for ii in range(int(kf))))
+        return sum((self.pdf(ii) for ii in range(0, ceil(kf))))
 
     def calculate_mean(self) -> float:
-        """Calculate the mean from p and n"""
-        n = self.n
-        p = self.p
-        self.mean = mean = n * p
+        """Calculate the mean from λ."""
+        self.mean = mean = self.λ
         return mean
 
     def calculate_stdev(self) -> float:
-        """Calculate the standard deviation using p and n"""
-        n = self.n
-        p = self.p
-        self.stdev = stdev = sqrt(n * p * (1 - p))
+        """Calculate the standard deviation using ``λ``."""
+        self.stdev = stdev = sqrt(self.λ)
         return stdev
 
-    def replace_stats_from_dataset(self, dset: DataSet) -> tuple[float, int]:
+    def replace_stats_from_dataset(self, dset: DataSet) -> float:
         """Function to calculate p and n from a data set.
 
         Where the read in data set is taken as the population.
         """
         if dset:
             self.n = n = dset._size
-            self.p = p = sum(dset._data) / n
-            self.mean = n * p
-            self.stdev = sqrt(n * p * (1 - p))
-        return self.p, self.n
+            if (mean := sum(dset._data)/n) <= 0.0:
+                msg = 'Inconsistent dataset, mean <= 0'
+                raise ValueError(msg)
+            self.mean = self.λ = mean = sum(dset._data) / n
+            self.stdev = sqrt(mean)
+        return self.λ
 
     def plot_bar_data(self) -> None:
         """Produce a bar-graph of the data using the matplotlib pyplot library."""
         n = self.n
-        p = self.p
+        p = self.λ
 
         fig, axis = plt.subplots()
         axis.bar(('0', '1'), (n * (1 - p), n * p), color='maroon', width=0.6)
@@ -145,21 +136,27 @@ class Binomial(DiscreteDist):
         return xs, ys
 
     def __add__(self, other: Self) -> Self:
-        """Add together two Binomial distributions with equal p."""
-        if type(other) is not Binomial:
-            msg = 'A Binomial distribution cannot be added to a {}'
+        """Add together two Poisson distributions.
+
+        Poisson distributions are closed but not stable, thus if two independent random
+        variables ``X₁`` and ``X₂`` are Poisson distributed then ``X₁ + X₂`` is Poisson
+        distributed with ``λ = λ₁ + λ₂``. Unlike the Normal distribution, Poisson
+        distributed random variables do not scale. That is ``aX₁ + bX₂`` is not Poisson
+        unless both ``a`` and ``b`` are 1, or one is ``1`` and the other is ``0``.
+
+
+        """
+        if type(other) is not Poisson:
+            msg = 'A Poisson distribution cannot be added to a {}'
             msg = msg.format(type(other))
             raise TypeError(msg)
-        if self.p != other.p:
-            msg = 'p values are not equal'
-            raise ValueError(msg)
 
-        return Binomial(self.p, self.n + other.n)
+        return Poisson(self.λ + other.λ)
 
     def __repr__(self) -> str:
-        repr_str = 'Binomial({}, {})'
-        return repr_str.format(self.p, self.n)
+        repr_str = 'Poisson({})'
+        return repr_str.format(self.λ)
 
     def __str__(self) -> str:
-        user_str = 'mean {}, standard deviation {}, p {}, n {}'
-        return user_str.format(self.mean, self.stdev, self.p, self.n)
+        user_str = 'mean {}, standard deviation {}, λ {}'
+        return user_str.format(self.mean, self.stdev, self.λ)

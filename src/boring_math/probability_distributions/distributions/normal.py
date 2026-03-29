@@ -38,52 +38,76 @@ class Normal(ContDist):
 
         where
 
-        ``μ = mu =`` mean value
+        ``μ`` is the mean value
 
-        ``σ = sigma =`` standard deviation
+        ``σ`` is the standard deviation
 
     """
 
-    def __init__(self, mu: float = 0.0, sigma: float = 1.0):
-        if sigma <= 0:
-            msg = 'For a Normal distribution, sigma must be greater than 0'
+    def __init__(self, μ: float = 0.0, σ: float = 1.0):
+        if σ <= 0:
+            msg = 'For a Normal distribution, σ must be greater than 0'
             raise ValueError(msg)
 
-        self.mu = mu
-        self.sigma = sigma
+        self.μ = μ
+        self.σ = σ 
 
         super().__init__()
 
     def __repr__(self) -> str:
         repr_str = 'mean {}, standard deviation {}'
-        return repr_str.format(self.mu, self.sigma)
+        return repr_str.format(self.μ, self.σ)
 
     def pdf(self, x: float) -> float:
         """Normal probability distribution function."""
         c = 1.0 / sqrt(2 * pi)
-        mu = self.mu
-        sigma = self.sigma
-        return (c / sigma) * exp(-0.5 * ((x - mu) / sigma) ** 2)
+        μ = self.μ
+        σ = self.σ
+        return (c/σ) * exp(-0.5 * ((x - μ)/σ)**2)
 
     def cdf(self, x: float) -> float:
         """Normal cumulative probability distribution function."""
-        mu = self.mu
-        c = self.sigma * sqrt(2)
-        return 0.5 * (1 + erf((x - mu) / c))
+        μ = self.μ
+        c = self.σ * sqrt(2)
+        return 0.5 * (1 + erf((x - μ)/c))
 
-    def __add__(self, other: Self) -> Self:
+    def __add__(self, other: Self|float) -> Self:
         """Add together two Normal distributions.
 
-        Normal distributions are stable, thus the sum of two
-        is another Normal distribution.
+        Normal distributions are stable, thus if two independent random variables
+        ``X₁`` and ``X₂`` are Normally distributed then ``aX₁ + bX₂`` is also
+        Normally distributed with ``μ = μ₁ + μ₂`` and ``σ² = a²σ₁² + b²σ₂²``.
 
         """
+        if type(other) is float:
+            return Normal(self.μ + other, self.σ)
+
         if type(other) is not Normal:
             msg = 'A Normal distribution added to a {} distribution is not Normal.'
             msg = msg.format(type(other))
             raise TypeError(msg)
 
-        return Normal(self.mu + other.mu, sqrt(self.sigma**2 + other.sigma**2))
+        return Normal(self.μ + other.μ, sqrt((self.σ)**2 + (other.σ)**2))
+
+    def __mul__(self, factor: float) -> Self:
+        """Scale Normal distribution by a non-zero factor."""
+        if factor > 0:
+            return Normal(self.μ, abs(factor) * self.σ)
+        elif factor < 0:
+            return Normal(-self.μ, abs(factor) * self.σ)
+        else:
+            msg = 'A Normal distribution cannot be scaled by a factor zero.'
+            raise TypeError(msg)
+
+    def __rmul__(self, factor: float) -> Self:
+        """Scale Normal distribution by a non-zero factor."""
+        if factor > 0:
+            return Normal(self.μ, abs(factor) * self.σ)
+        elif factor < 0:
+            return Normal(-self.μ, abs(factor) * self.σ)
+        else:
+            msg = 'A Normal distribution cannot be scaled by a factor zero.'
+            raise TypeError(msg)
 
 
 #   def plot_histogram_data(self) -> None:
