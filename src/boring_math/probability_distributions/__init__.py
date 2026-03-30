@@ -16,14 +16,14 @@
 Probability Distributions
 -------------------------
 
-..admonition:: Visualize probability distributions
+.. admonition:: Visualize probability distributions
 
     Distributions can be compared to either sample or population
     data. Package originally derived from a Udacity exercise.
 
 .. note::
 
-    **Module overview:**
+    **Package overview:**
 
     - boring_math.probability_distributions.dataset
 
