@@ -26,7 +26,7 @@ exercise template.
 """
 
 from typing import final, Self
-from math import comb, sqrt
+from math import comb, floor, sqrt
 import matplotlib.pyplot as plt
 from ..datasets import DataSet
 from ..distribution import DiscreteDist
@@ -52,15 +52,15 @@ class Binomial(DiscreteDist):
     """
 
     def __init__(self, p: float = 0.5, n: int = 20):
-        if not (0.0 <= p <= 1.0) or n < 1:
-            msg1 = 'For a Binomial distribution, '
+        if not (0.0 <= p <= 1.0) or n < 0:
+            msg1 = 'Binomial: For a Binomial distribution, '
             msg2 = msg3 = ''
             if not (0.0 <= p <= 1.0):
                 msg2 = '0 <= p <= 1'
             if n < 0:
                 msg3 = 'the number of trials n must be non-negative'
             if msg2 and msg3:
-                msg = msg1 + msg2 + ' and ' + msg3 + '.'
+                msg = msg1 + msg2 + ', and ' + msg3 + '.'
             else:
                 msg = msg1 + msg2 + msg3 + '.'
             raise ValueError(msg)
@@ -79,7 +79,7 @@ class Binomial(DiscreteDist):
 
     def cdf(self, kf: float) -> float:
         """Binomial cumulative probability distribution function."""
-        return sum((self.pdf(ii) for ii in range(int(kf))))
+        return sum((self.pdf(ii) for ii in range(floor(kf)+1)))
 
     def calculate_mean(self) -> float:
         """Calculate the mean from p and n"""

@@ -17,6 +17,7 @@ from boring_math.probability_distributions.distributions.normal import Normal
 
 tolerance14 = 1e-14
 tolerance13 = 1e-14
+tolerance05 = 1e-5
 
 class Test_Normal:
     def test_normal01(self) -> None:
@@ -28,3 +29,8 @@ class Test_Normal:
         norm = Normal(1, 1)
         assert norm.pdf(1) == 1.0/sqrt(2*pi)
         assert norm.cdf(1) == 0.5
+
+    def test_normal_arbitrary(self) -> None:
+        norm = Normal(3.143, 0.756)
+        assert abs(norm.pdf(3) - 0.518345) < tolerance05
+        assert abs(norm.cdf(3) - 0.424986) < tolerance05
