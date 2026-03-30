@@ -25,7 +25,7 @@ A Poisson distribution class.
 """
 
 from typing import final, Self
-from math import floor, ceil, factorial as fac, sqrt
+from math import floor, factorial as fac, sqrt
 import matplotlib.pyplot as plt
 from boring_math.special_functions.exponential import exp
 from ..datasets import DataSet
@@ -72,7 +72,7 @@ class Poisson(DiscreteDist):
 
     def cdf(self, kf: float) -> float:
         """Binomial cumulative probability distribution function."""
-        return sum((self.pdf(ii) for ii in range(0, ceil(kf))))
+        return sum((self.pdf(ii) for ii in range(0, floor(kf)+1)))
 
     def calculate_mean(self) -> float:
         """Calculate the mean from λ."""
