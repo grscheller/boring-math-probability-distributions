@@ -17,7 +17,7 @@
 #
 
 from typing import final, Self
-from boring_math.special_functions.beta import beta_real
+from boring_math.special_functions.gamma_family.beta import beta_real
 # import matplotlib.pyplot as plt
 # from ..datasets import DataSet
 from ..distribution import ContDist

@@ -27,7 +27,7 @@ A Poisson distribution class.
 from typing import final, Self
 from math import floor, factorial as fac, sqrt
 import matplotlib.pyplot as plt
-from boring_math.special_functions.exponential import exp
+from boring_math.special_functions.exponential.exp import exp
 from ..datasets import DataSet
 from ..distribution import DiscreteDist
 
