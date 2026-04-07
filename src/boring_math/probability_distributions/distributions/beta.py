@@ -16,10 +16,13 @@
 # Udacity® (https://www.udacity.com/)
 #
 
+from math import floor
 from typing import final, Self
-from boring_math.special_functions.gamma_family.beta import beta_real
+
 # import matplotlib.pyplot as plt
 # from ..datasets import DataSet
+from pythonic_fp.iterables.folding import accumulate
+from boring_math.special_functions.gamma_family.beta import beta_real
 from ..distribution import ContDist
 
 __all__ = ['Beta']
@@ -27,9 +30,8 @@ __all__ = ['Beta']
 
 @final
 class Beta(ContDist):
-    """Class for visualizing Beta distributions.
-
-    .. note::
+    """
+    .. admonition:: Class for visualizing Beta distributions.
 
         The Beta distribution is a continuous probability distribution
         defined on ``(0, 1)`` with probability density function
@@ -38,51 +40,86 @@ class Beta(ContDist):
 
         where
 
-        ``μ = α/(α+β)``
+        - ``μ = α/(α+β)``
+        - ``σ² =  αβ/((α+β)²(α+β+1))``
+        - ``mode = (α-1)/(α+β-2)`` for ``α, β > 1``
+        - ``B(α,β) = Γ(α)Γ(β)/Γ(α+β)`` is the normalization factor.
 
-        ``σ² =  αβ/((α+β)²(α+β+1))``
+        .. note::
 
-        ``mode = (α-1)/(α+β-2)`` for ``α, β > 1``
-
-        and ``B(α,β) = Γ(α)Γ(β)/Γ(α+β)`` is the normalization factor.
+            There is no closed form for a beta distribution's cdf.
+            Thus the pdf is numerically integrated to provide a cdf.
 
     """
 
-    def __init__(self, α: float, β: float):
-        if α <= 0 or β <= 0:
+    def __init__(self, a: float, b: float):
+        if a <= 0 or b <= 0:
             msg = 'For a Beta distribution, α, β > 0'
             raise ValueError(msg)
 
-        self.α = α
-        self.β = β
-        self.mu = α/(α+β)
-        self.sigma = α*β/((α+β)**2 * (α+β+1))
+        self.α = a
+        self.β = b
+        self.μ = a / (a + b)
+        self.σ = a * b / ((a + b) ** 2 * (a + b + 1))
+
+        self._cdf_steps = (steps := 2048)
+        self._cdf: tuple[float, ...] = tuple(
+            accumulate(
+                (self.pdf((n - 0.5)/steps)/steps for n in range(1, steps+1)),
+                lambda u, v: u + v,
+                0.0,
+            )
+        )
 
         super().__init__()
 
-    def __repr__(self) -> str:
-        repr_str = 'Beta({}, {})'
-        return repr_str.format(self.α, self.β)
-
     def pdf(self, x: float) -> float:
-        """Beta probability distribution function."""
-        if x < 0 or x > 1:
+        """
+        .. admonition:: Beta pdf
+
+            Beta probability distribution function.
+
+        :param x: ``x ∈ (0, 1)``
+        :returns: Value of the PDF at ``x``, ``0,0`` if outside domain.
+
+        """
+        if x <= 0 or x >= 1:
             return 0.0
 
         α = self.α
         β = self.β
-        val: float = x**(α-1) * (1-x)**(β-1) / beta_real(α, β)
+        val: float = x ** (α - 1) * (1 - x) ** (β - 1) / beta_real(α, β)
         return val
 
     def cdf(self, x: float) -> float:
-        """Beta cumulative probability distribution function."""
-        raise NotImplementedError("This function not yet implemented")
+        """
+        .. admonition:: Beta cdf
+
+            Beta cumulative probability distribution function.
+
+        :param x: ``x ∈ (0, 1)``
+        :returns: Value of the cdf at ``x`` from numerically integrated pdf.
+
+        """
+        if x <= 0:
+            return 0.0
+        elif x >= 1.0:
+            return 1.0
+
+        return self._cdf[floor(x * self._cdf_steps)]
 
     def __add__(self, other: Self) -> Self:
-        """Fail if two Beta distributions are added.
+        """
+        .. admonition:: Fail if two Beta distributions are added.
 
-        Beta distributions are not stable, thus the sum of two random
-        beta distributed variables is not Beta distributed.
+            Beta distributions are not stable, thus the sum of two
+            random beta distributed variables is not Beta distributed.
+
+        :param other: Another Beta distribution class instance.
+        :returns: Never returns, Beta distributions are not stable.
+        :raises ValueError: If Beta distributions are added.
+        :raises TypeError: If a Beta distributions is added to another
+                           type of probability distribution class.
 
         """
         if type(other) is Beta:
@@ -90,9 +127,23 @@ class Beta(ContDist):
             msg2 = 'the sum of two is not a Beta distribution.'
             msg = (msg1 + msg2).format()
             raise ValueError(msg)
-        else:
-            msg = '\n'
-            msg1 = 'The Beta distribution is not a stable distribution,\n'
-            msg2 = 'two added together do not procuce another Beta distribution.'
-            msg = msg.format(type(other))
-            raise TypeError(msg)
+        msg1 = 'A Beta distribution added to a {} distribution\n'
+        msg2 = 'is not a Beta distribution.'
+        msg = msg.format(type(other))
+        raise TypeError(msg)
+
+    def __repr__(self) -> str:
+        """
+        :returns: The string ``Beta(α, β)`` where ``α, β > 0``.
+
+        """
+        repr_str = 'Beta({}, {})'
+        return repr_str.format(self.α, self.β)
+
+    def __str__(self) -> str:
+        """
+        :returns: The string ``Beta(a=α, b=β)`` where ``α, β > 0``.
+
+        """
+        repr_str = 'Beta(a={}, b={})'
+        return repr_str.format(self.α, self.β)

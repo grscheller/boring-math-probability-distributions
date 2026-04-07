@@ -38,28 +38,50 @@ class Normal(ContDist):
 
         where
 
-        ``μ`` is the mean value
-
-        ``σ`` is the standard deviation
+        - ``μ`` is the mean value
+        - ``σ`` is the standard deviation
 
     """
 
-    def __init__(self, μ: float = 0.0, σ: float = 1.0):
-        if σ <= 0:
+    def __init__(self, mu: float = 0.0, sigma: float = 1.0):
+        if sigma <= 0:
             msg = 'For a Normal distribution, σ must be greater than 0'
             raise ValueError(msg)
 
-        self.μ = μ
-        self.σ = σ 
+        self.μ = mu
+        self.σ = sigma 
 
         super().__init__()
 
     def __repr__(self) -> str:
-        repr_str = 'mean {}, standard deviation {}'
+        """
+        :returns: The string ``Normal(μ, σ)`` where ``μ`` is the mean
+                  and ``σ`` is the std deviation of the distribution.
+
+        """
+        repr_str = 'Normal({}, {})'
+        return repr_str.format(self.μ, self.σ)
+
+    def __str__(self) -> str:
+        """
+        :returns: The string ``Normal(mu=μ, sigma=σ)`` where ``μ``
+                  is the mean and ``σ`` is the std deviation of
+                  the distribution.
+
+        """
+        repr_str = 'Normal(mu={}, sigma={})'
         return repr_str.format(self.μ, self.σ)
 
     def pdf(self, x: float) -> float:
-        """Normal probability distribution function."""
+        """
+        .. admonition:: Normal PDF
+
+            Normal probability distribution function.
+
+        :param x: ``x ∈ [-∞, ∞]``
+        :returns: Value of the PDF at ``x``
+
+        """
         c = 1.0 / sqrt(2 * pi)
         μ = self.μ
         σ = self.σ
