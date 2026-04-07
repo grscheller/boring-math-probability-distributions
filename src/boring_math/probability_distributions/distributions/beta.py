@@ -34,7 +34,8 @@ class Beta(ContDist):
     .. admonition:: Class for visualizing Beta distributions.
 
         The Beta distribution is a continuous probability distribution
-        defined on ``(0, 1)`` with probability density function
+        defined on the sample space ``[0, 1]`` with probability density
+        function
 
         ``f(x) = xᵅ⁻¹(1-x)ᵝ⁻¹/B(α,β)`` for α,β > 0
 
@@ -47,8 +48,9 @@ class Beta(ContDist):
 
         .. note::
 
-            There is no closed form for a beta distribution's cdf.
-            Thus the pdf is numerically integrated to provide a cdf.
+            There is no closed form for a beta distribution's CDF for
+            all ``α, β > 0``. To provide a CDf, the PDF is numerically
+            integrated.
 
     """
 
@@ -59,8 +61,8 @@ class Beta(ContDist):
 
         self.α = a
         self.β = b
-        self.μ = a / (a + b)
-        self.σ = a * b / ((a + b) ** 2 * (a + b + 1))
+        self.μ = a / (a+b)
+        self.σ = a*b / ((a+b)**2 * (a+b+1))
 
         self._cdf_steps = (steps := 2048)
         self._cdf: tuple[float, ...] = tuple(
@@ -75,11 +77,11 @@ class Beta(ContDist):
 
     def pdf(self, x: float) -> float:
         """
-        .. admonition:: Beta pdf
+        .. admonition:: Beta PDF
 
             Beta probability distribution function.
 
-        :param x: ``x ∈ (0, 1)``
+        :param x: ``x ∈ [0, 1]``
         :returns: Value of the PDF at ``x``, ``0,0`` if outside domain.
 
         """
@@ -93,12 +95,13 @@ class Beta(ContDist):
 
     def cdf(self, x: float) -> float:
         """
-        .. admonition:: Beta cdf
+        .. admonition:: Beta CDF
 
-            Beta cumulative probability distribution function.
+            Beta cumulative probability distribution function defined
+            on the probability sample space ``[0, 1]``.
 
-        :param x: ``x ∈ (0, 1)``
-        :returns: Value of the cdf at ``x`` from numerically integrated pdf.
+        :param x: Where ``x`` is an element of the sample space.
+        :returns: CDF at ``x`` obtained by numerically integrated the PDF.
 
         """
         if x <= 0:
