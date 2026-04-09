@@ -16,12 +16,12 @@
 # Udacity® (https://www.udacity.com/)
 #
 
-from math import floor
+from math import floor, inf
 from typing import final, Self
 
 # import matplotlib.pyplot as plt
 # from ..datasets import DataSet
-from pythonic_fp.iterables.folding import accumulate
+from pythonic_fp.iterables.folding import accumulate, fold_left
 from boring_math.special_functions.gamma_family.beta import beta_real
 from ..distribution import ContDist
 
@@ -54,22 +54,34 @@ class Beta(ContDist):
 
     """
 
-    def __init__(self, a: float, b: float):
-        if a <= 0 or b <= 0:
+    def __init__(self, α: float, β: float):
+        if α <= 0 or β <= 0:
             msg = 'For a Beta distribution, α, β > 0'
             raise ValueError(msg)
 
-        self.α = a
-        self.β = b
-        self.μ = a / (a+b)
-        self.σ = a*b / ((a+b)**2 * (a+b+1))
+        self.α = α
+        self.β = β
+        self.μ = α / (α+β)
+        self.σ = α*β / ((α+β)**2 * (α+β+1))
 
         self._cdf_steps = (steps := 2048)
-        self._cdf: tuple[float, ...] = tuple(
-            accumulate(
-                (self.pdf((n - 0.5)/steps)/steps for n in range(1, steps+1)),
+        initial_steps = 512
+        delta = 1.0 / steps
+        initial_delta = delta / initial_steps
+        if α >= 1.0:
+            start = 0.0
+        else:
+            start = fold_left(
+                (self.pdf(n*initial_delta)*initial_delta for n in range(1, initial_steps+1)),
                 lambda u, v: u + v,
                 0.0,
+            ) - self.pdf(delta) * delta / 2.0
+
+        self._cdf: tuple[float, ...] = tuple(
+            accumulate(
+                (self.pdf(n*delta)*delta for n in range(1, steps+1)),
+                lambda u, v: u + v,
+                start,
             )
         )
 
@@ -85,13 +97,19 @@ class Beta(ContDist):
         :returns: Value of the PDF at ``x``, ``0,0`` if outside domain.
 
         """
-        if x <= 0 or x >= 1:
+        if x < 0 or x > 1:
             return 0.0
 
         α = self.α
         β = self.β
-        val: float = x ** (α - 1) * (1 - x) ** (β - 1) / beta_real(α, β)
-        return val
+        try:
+            val: float = x**(α-1) * (1-x)**(β-1) / beta_real(α, β)
+        except ZeroDivisionError:
+            if x == 0 or x == 1:
+                return inf
+            raise ZeroDivisionError
+        else:
+            return val
 
     def cdf(self, x: float) -> float:
         """

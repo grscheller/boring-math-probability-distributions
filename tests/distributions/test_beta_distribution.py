@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from math import pi, sqrt
+from cmath import isinf
 from boring_math.probability_distributions.distributions.beta import Beta
 
 tolerance14 = 1e-14
@@ -35,7 +36,7 @@ class Test_Beta:
         assert abs(beta.pdf(1.00) - 0.0) < tolerance14
 
         assert beta.cdf(-0.5) == beta.cdf(0.0) == 0.0
-    #   assert beta.cdf(1.5) == beta.cdf(1.0) == 1.0
+        assert beta.cdf(1.5) == beta.cdf(1.0) == 1.0
         assert abs(beta.cdf(0.00) - 0.0) < tolerance14
         assert abs(beta.cdf(0.25) - 5/32) < tolerance07
         assert abs(beta.cdf(0.50) - 1/2) < tolerance07
@@ -45,11 +46,11 @@ class Test_Beta:
     def test_beta_half_half(self) -> None:
         beta = Beta(1/2, 1/2)
         assert beta.pdf(-0.5) == beta.pdf(1.5) == 0.0
-        assert abs(beta.pdf(0.00) - 0.0) < tolerance14
+        assert isinf(beta.pdf(0.00))
         assert abs(beta.pdf(0.25) - 4.0/(pi*sqrt(3))) < tolerance14
         assert abs(beta.pdf(0.50) - 2/pi) < tolerance14
         assert abs(beta.pdf(0.75) - 4.0/(pi*sqrt(3))) < tolerance14
-        assert abs(beta.pdf(1.00) - 0.0) < tolerance14
+        assert isinf(beta.pdf(1.00))
 
         assert beta.cdf(-0.5) == beta.cdf(0.0) == 0.0
         assert beta.cdf(1.5) == beta.cdf(1.0) == 1.0
@@ -80,11 +81,11 @@ class Test_Beta:
     def test_beta_1_1(self) -> None:
         beta = Beta(1, 1)
         assert beta.pdf(-0.5) == beta.pdf(1.5) == 0.0
-        assert abs(beta.pdf(0.00) - 0.0) < tolerance14
+        assert abs(beta.pdf(0.00) - 1.0) < tolerance14
         assert abs(beta.pdf(0.25) - 1.0) < tolerance14
         assert abs(beta.pdf(0.50) - 1.0) < tolerance14
         assert abs(beta.pdf(0.75) - 1.0) < tolerance14
-        assert abs(beta.pdf(1.00) - 0.0) < tolerance14
+        assert abs(beta.pdf(1.00) - 1.0) < tolerance14
 
         assert beta.pdf(-0.5) == beta.pdf(1.5) == 0.0
         assert abs(beta.cdf(0.00) - 0.00) < tolerance14
