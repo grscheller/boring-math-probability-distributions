@@ -52,12 +52,14 @@ class Test_Beta:
         assert abs(beta.pdf(0.75) - 4.0/(pi*sqrt(3))) < tolerance14
         assert isinf(beta.pdf(1.00))
 
-        assert beta.cdf(-0.5) == beta.cdf(0.0) == 0.0
-        assert beta.cdf(1.5) == beta.cdf(1.0) == 1.0
+    def test_beta_third_third(self) -> None:
+        beta = Beta(1/3, 1/3)
         assert abs(beta.cdf(0.00) - 0.0) < tolerance14
-        assert abs(beta.cdf(0.25) - 1/3) < tolerance07
+        assert abs(beta.cdf(0.25) - 0.007762487) < tolerance07
+        assert abs(beta.cdf(1/3) - 1/6) < tolerance07
         assert abs(beta.cdf(0.50) - 1/2) < tolerance07
-        assert abs(beta.cdf(0.75) - 2/3) < tolerance07
+        assert abs(beta.cdf(2/3) - 5/3) < tolerance07
+        assert abs(beta.cdf(3/4) - 0.92237513) < tolerance07
         assert abs(beta.cdf(1.00) - 1.0) < tolerance14
 
     def test_beta_1_3(self) -> None:

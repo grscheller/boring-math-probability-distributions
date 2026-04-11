@@ -43,6 +43,11 @@ build-backend = "flit_core.buildapi"
 [tool.flit.module]
 name = "boring_math.probability_distributions"
 
+[tool.flit.sdist]
+exclude = [
+  "explore/",
+]
+
 [tool.mypy]
 explicit_package_bases = true
 local_partial_types = true
