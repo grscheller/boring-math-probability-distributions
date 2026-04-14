@@ -15,13 +15,15 @@
 """
 Continuous Distributions
 ========================
-
-- Normal  boring_math.probability_distributions.distributions.normal
-- Uniform  boring_math.probability_distributions.distributions.uniform
+ 
+- Beta:- boring_math.probability_distributions.distributions.beta  
+- Normal - boring_math.probability_distributions.distributions.normal
+- Uniform - boring_math.probability_distributions.distributions.uniform
 
 Discrete Distributions
 ======================
 
-- Binomial: boring_math.probability_distributions.distributions.binomial
+- Binomial:- boring_math.probability_distributions.distributions.binomial
+- Poisson:- boring_math.probability_distributions.distributions.poisson
 
 """

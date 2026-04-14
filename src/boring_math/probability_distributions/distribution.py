@@ -27,9 +27,8 @@ Providing base classes to visualize probability distributions.
 
 from abc import ABC, abstractmethod
 from typing import Self
-# import matplotlib.pyplot as plt
-from .datasets import DataSet
 from pythonic_fp.fptools.maybe import MayBe
+from .datasets import DataSet
 
 __all__ = ['ContDist', 'DiscreteDist']
 
@@ -40,6 +39,9 @@ class ContDist(ABC):
     def __init__(self) -> None:
         self.population: MayBe[DataSet] = MayBe()
         self.samples: list[DataSet] = []
+
+        # Numerically integrated CDF
+        self._cdf: MayBe[tuple[float, ...]] = MayBe()
 
     @abstractmethod
     def pdf(self, kf: float) -> float:
@@ -57,29 +59,6 @@ class ContDist(ABC):
         ...
 
 
-#    def plot_bar_data(self) -> None: ...
-
-#    def barplot_pdf(self) -> tuple[list[int], List[float]]:
-#        """Function to plot the pdf of the binomial distribution.
-#
-#        Returns:
-#            list: x values used for the pdf plot
-#            list: y values used for the pdf plot
-#        """
-#        pdf: Callable[[int], float] = lambda ii: self.pdf(float(ii))
-#
-#        xs: list[int] = list(range(self.n + 1))
-#        ys: list[float] = list(map(pdf, range(self.n + 1)))
-#
-#        plt.bar(list(str(x) for x in xs), ys, color ='maroon', width = 0.4)
-#        plt.title('Probability Density of Success')
-#        plt.xlabel('Successes for {} trials'.format(self.n))
-#        plt.ylabel('Probability')
-#        plt.show()
-#
-#        return xs, ys
-
-
 class DiscreteDist(ABC):
     """Base class to visualize discrete probability distributions."""
 
@@ -95,3 +74,12 @@ class DiscreteDist(ABC):
 
     @abstractmethod
     def __add__(self, other: Self) -> Self: ...
+
+    @abstractmethod
+    def plot_pdf_bar_graph(
+        self,
+        /,
+        test: bool = False,
+        lowercap: int | None = None,
+        uppercap: int | None = None,
+    ) -> tuple[list[int], list[float]]: ...

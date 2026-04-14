@@ -24,7 +24,6 @@ A binomial distribution class, derived from a Udacity
 exercise template.
 
 """
-
 from typing import final, Self
 from math import comb, floor, sqrt
 import matplotlib.pyplot as plt
@@ -119,28 +118,48 @@ class Binomial(DiscreteDist):
         axis.set_ylabel('Sample Count')
         plt.show()
 
-    def plot_bar_pdf(self) -> tuple[list[int], list[float]]:
+    def plot_pdf_bar_graph(
+        self,
+        /,
+        show: bool = True,
+        lower_cap: int | None = None,
+        upper_cap: int | None = None,
+    ) -> tuple[list[int], list[float]]:
         """Function to plot the pdf of the binomial distribution.
 
-        :return:
-            A tuple containing
-
-            - list[int]: x values used for the pdf plot
-            - list[float]: y values used for the pdf plot
+        :param show: If False suppress printing the bar graph, useful in pytest test suite.
+        :param lower_cap: Put a lower cap on the values printed.
+        :param upper_cap: Put an upper cap on the values printed.
+        :returns: A ``tuple[list[int], list[float]]`` where
+                  ``list[int]`` are the ``x`` values used for the bar graph and
+                  ``list[float]`` are the corresponding probabilities for each ``x``.
 
         """
-
         def pdf(ii: int) -> float:
             return self.pdf(float(ii))
 
-        xs: list[int] = list(range(self.n + 1))
-        ys: list[float] = list(map(pdf, range(self.n + 1)))
+        if lower_cap is None:
+            lower_cap = 0
 
-        plt.bar(list(str(x) for x in xs), ys, color='maroon', width=0.4)
-        plt.title('Probability Density of Success')
-        plt.xlabel('Successes for {} trials'.format(self.n))
-        plt.ylabel('Probability')
-        plt.show()
+        if upper_cap is None:
+            upper_cap = self.n
+
+        if upper_cap < lower_cap:
+            msg = f'binomial: lower_cap = {lower_cap} must be <= upper_cap = {upper_cap}'
+            raise ValueError(msg)
+
+        lower_cap = max(lower_cap, 0)
+        upper_cap = min(upper_cap, self.n)
+
+        xs: list[int] = list(range(lower_cap, upper_cap + 1))
+        ys: list[float] = list(map(pdf, range(lower_cap, upper_cap + 1)))
+
+        if show:
+            plt.bar(list(str(x) for x in xs), ys, color ='maroon', width = 0.4)
+            plt.title('Probability Density of Success')
+            plt.xlabel('Successes for {} trials'.format(self.n))
+            plt.ylabel('Probability')
+            plt.show()
 
         return xs, ys
 
@@ -163,3 +182,4 @@ class Binomial(DiscreteDist):
     def __str__(self) -> str:
         user_str = 'mean {}, standard deviation {}, p {}, n {}'
         return user_str.format(self.mean, self.stdev, self.p, self.n)
+

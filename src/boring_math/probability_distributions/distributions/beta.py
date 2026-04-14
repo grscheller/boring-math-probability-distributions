@@ -18,6 +18,7 @@
 
 from math import floor, inf
 from typing import final, Self
+from pythonic_fp.fptools.maybe import MayBe
 
 # import matplotlib.pyplot as plt
 # from ..datasets import DataSet
@@ -55,6 +56,8 @@ class Beta(ContDist):
     """
 
     def __init__(self, α: float, β: float):
+        super().__init__()
+
         if α <= 0 or β <= 0:
             msg = 'For a Beta distribution, α, β > 0'
             raise ValueError(msg)
@@ -77,15 +80,11 @@ class Beta(ContDist):
                 0.0,
             ) - self.pdf(delta) * delta / 2.0
 
-        self._cdf: tuple[float, ...] = tuple(
-            accumulate(
-                (self.pdf(n*delta)*delta for n in range(1, steps+1)),
-                lambda u, v: u + v,
-                start,
-            )
-        )
-
-        super().__init__()
+        self._cdf: MayBe[tuple[float, ...]] = MayBe(tuple(accumulate(
+            (self.pdf(n*delta)*delta for n in range(1, steps+1)),
+            lambda u, v: u + v,
+            start,
+        )))
 
     def pdf(self, x: float) -> float:
         """
@@ -127,7 +126,7 @@ class Beta(ContDist):
         elif x >= 1.0:
             return 1.0
 
-        return self._cdf[floor(x * self._cdf_steps)]
+        return self._cdf.get()[floor(x * self._cdf_steps)]
 
     def __add__(self, other: Self) -> Self:
         """
@@ -168,3 +167,12 @@ class Beta(ContDist):
         """
         repr_str = 'Beta(a={}, b={})'
         return repr_str.format(self.α, self.β)
+
+    def plot_pdf_bar_graph(
+        self,
+        /,
+        show: bool = True,
+        lower_cap: int | None = None,
+        upper_cap: int | None = None,
+    ) -> tuple[list[int], list[float]]:
+        raise NotImplementedError

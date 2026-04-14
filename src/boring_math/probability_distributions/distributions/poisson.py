@@ -160,3 +160,12 @@ class Poisson(DiscreteDist):
     def __str__(self) -> str:
         user_str = 'mean {}, standard deviation {}, λ {}'
         return user_str.format(self.mean, self.stdev, self.λ)
+
+    def plot_pdf_bar_graph(
+        self,
+        /,
+        show: bool = True,
+        lower_cap: int | None = None,
+        upper_cap: int | None = None,
+    ) -> tuple[list[int], list[float]]:
+        raise NotImplementedError
