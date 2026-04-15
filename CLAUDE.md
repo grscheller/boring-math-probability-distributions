@@ -27,7 +27,7 @@ python -m mypy src/
 python -m flit build
 ```
 
-Test dependencies (numpy, scipy) are optional and used only in comparison/exploration scripts, not in the main test suite.
+Pytest is configured via `[tool.pytest]` in `pyproject.toml` (not `[tool.pytest.ini_options]`), with `addopts = ["-ra"]`, `consider_namespace_packages = true`, and `testpaths = ["tests/"]`. Test optional-dependencies (`pytest`, `numpy`, `scipy`) are declared under `[project.optional-dependencies] test`; numpy and scipy are used only in comparison/exploration scripts, not the main test suite.
 
 ## Architecture
 
