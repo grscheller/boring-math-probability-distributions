@@ -117,6 +117,12 @@ class Beta(ContDist):
             Beta cumulative probability distribution function defined
             on the probability sample space ``[0, 1]``.
 
+            .. note::
+
+                For all ``α, β > 0`` there is no single closed form for
+                a beta distribution's CDF. To provide a CDf, the PDF is
+                numerically integrated.
+
         :param x: Where ``x`` is an element of the sample space.
         :returns: CDF at ``x`` obtained by numerically integrated the PDF.
 
