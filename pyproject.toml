@@ -65,8 +65,10 @@ dmypy = false
 strict = true
 report_progress = true
 
-[tool.pytest.ini_options]
-addopts = "-ra"
+[tool.pytest]
+addopts = [
+  "-ra",
+]
 consider_namespace_packages = true
 testpaths = ["tests/"]
 
