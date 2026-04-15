@@ -1,13 +1,15 @@
+#!/usr/bin/env python
+
 import matplotlib.pyplot as plt
 
 # Generate x values using a plain Python list and range
 x = [i * 0.1 for i in range(-100, 101)]  # -10.0 to 10.0 in steps of 0.1
 
 # Define two functions
-def f(x):
+def f(x: float) -> float:
     return x ** 2 - 4
 
-def g(x):
+def g(x: float) -> float:
     return 2 * x + 3
 
 # Compute y values using list comprehensions

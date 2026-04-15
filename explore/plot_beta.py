@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import matplotlib.pyplot as plt
 from boring_math.probability_distributions.distributions.beta import Beta
 
