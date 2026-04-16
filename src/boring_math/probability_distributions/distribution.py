@@ -60,21 +60,27 @@ class ContDist(ABC):
         """Add together two compatible distributions."""
         ...
 
-    def _compute_numerical_cdf(
+    def _compute_cdf_jump(
         self,
+        start: float,
+        delta: float,
+        /,
+        steps: int = 32,
+    ) -> float:
+        return 42.0
+
+    def _compute_numerical_cdf(self,
+        start: float,
+        stop: float,
         /,
         steps: int = 2048,
-        initial_steps: int = 512,
-        start: float = 0.0,
     ) -> None:
-        # TODO: scale over domains other than [0, 1]
         self._numerical_cdf_steps = MayBe(steps)
-        delta = 1.0 / steps
+        delta = (stop-start)/steps
 
         self._numerical_cdf_data = MayBe(tuple(accumulate(
-            (self.pdf(n*delta)*delta for n in range(1, steps+1)),
+            (self.pdf(start + (n-0.5)*delta)*delta for n in range(1, steps)),
             lambda u, v: u + v,
-            start,
         )))
 
 

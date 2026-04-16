@@ -21,7 +21,6 @@ from typing import final, Self
 
 # import matplotlib.pyplot as plt
 # from ..datasets import DataSet
-from pythonic_fp.iterables.folding import fold_left
 from boring_math.special_functions.gamma_family.beta import beta_real
 from ..distribution import ContDist
 
@@ -108,22 +107,9 @@ class Beta(ContDist):
 
         """
         steps = 2048
-        initial_steps: int = 512
 
         if not self._numerical_cdf_data:
-            # temporary artifact while refactoring code
-            delta = 1.0 / steps
-            initial_delta = delta / initial_steps
-            if self.α >= 1.0:
-                start = 0.0
-            else:
-                start = fold_left(
-                    (self.pdf(n*initial_delta)*initial_delta for n in range(1, initial_steps+1)),
-                    lambda u, v: u + v,
-                    0.0,
-                ) - self.pdf(delta) * delta / 2.0
-
-            self._compute_numerical_cdf(steps = steps, initial_steps = initial_steps, start = start)
+            self._compute_numerical_cdf(0.0, 1.0, steps = steps)
 
         if x <= 0:
             return 0.0

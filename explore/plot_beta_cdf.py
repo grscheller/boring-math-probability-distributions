@@ -33,3 +33,6 @@ plt.ylabel('F(x)')
 plt.ylim(-0.02, 1.02)
 plt.grid(alpha=0.3)
 plt.show()
+
+for val in ys:
+    print(val)

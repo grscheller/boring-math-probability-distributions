@@ -5,8 +5,9 @@ import numpy as np
 from scipy.stats import beta
 from boring_math.probability_distributions.distributions.beta import Beta
 
-a = 0.25
-b = 5
+# a = 0.25
+a = 0.35
+b = 0.35 
 
 beta_bm = Beta(a, b)
 
