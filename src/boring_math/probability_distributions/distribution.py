@@ -28,6 +28,7 @@ Providing base classes to visualize probability distributions.
 from abc import ABC, abstractmethod
 from typing import Self
 from pythonic_fp.fptools.maybe import MayBe
+from pythonic_fp.iterables.folding import accumulate
 from .datasets import DataSet
 
 __all__ = ['ContDist', 'DiscreteDist']
@@ -41,7 +42,8 @@ class ContDist(ABC):
         self.samples: list[DataSet] = []
 
         # Numerically integrated CDF
-        self._cdf: MayBe[tuple[float, ...]] = MayBe()
+        self._numerical_cdf_data: MayBe[tuple[float, ...]] = MayBe()
+        self._numerical_cdf_steps: MayBe[int] = MayBe()
 
     @abstractmethod
     def pdf(self, kf: float) -> float:
@@ -57,6 +59,23 @@ class ContDist(ABC):
     def __add__(self, other: Self) -> Self:
         """Add together two compatible distributions."""
         ...
+
+    def _compute_numerical_cdf(
+        self,
+        /,
+        steps: int = 2048,
+        initial_steps: int = 512,
+        start: float = 0.0,
+    ) -> None:
+        # TODO: scale over domains other than [0, 1]
+        self._numerical_cdf_steps = MayBe(steps)
+        delta = 1.0 / steps
+
+        self._numerical_cdf_data = MayBe(tuple(accumulate(
+            (self.pdf(n*delta)*delta for n in range(1, steps+1)),
+            lambda u, v: u + v,
+            start,
+        )))
 
 
 class DiscreteDist(ABC):

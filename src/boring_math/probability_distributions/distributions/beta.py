@@ -18,11 +18,10 @@
 
 from math import floor, inf
 from typing import final, Self
-from pythonic_fp.fptools.maybe import MayBe
 
 # import matplotlib.pyplot as plt
 # from ..datasets import DataSet
-from pythonic_fp.iterables.folding import accumulate, fold_left
+from pythonic_fp.iterables.folding import fold_left
 from boring_math.special_functions.gamma_family.beta import beta_real
 from ..distribution import ContDist
 
@@ -67,25 +66,6 @@ class Beta(ContDist):
         self.μ = α / (α+β)
         self.σ = α*β / ((α+β)**2 * (α+β+1))
 
-        self._cdf_steps = (steps := 2048)
-        initial_steps = 512
-        delta = 1.0 / steps
-        initial_delta = delta / initial_steps
-        if α >= 1.0:
-            start = 0.0
-        else:
-            start = fold_left(
-                (self.pdf(n*initial_delta)*initial_delta for n in range(1, initial_steps+1)),
-                lambda u, v: u + v,
-                0.0,
-            ) - self.pdf(delta) * delta / 2.0
-
-        self._cdf: MayBe[tuple[float, ...]] = MayBe(tuple(accumulate(
-            (self.pdf(n*delta)*delta for n in range(1, steps+1)),
-            lambda u, v: u + v,
-            start,
-        )))
-
     def pdf(self, x: float) -> float:
         """
         .. admonition:: Beta PDF
@@ -127,12 +107,30 @@ class Beta(ContDist):
         :returns: CDF at ``x`` obtained by numerically integrated the PDF.
 
         """
+        steps = 2048
+        initial_steps: int = 512
+
+        if not self._numerical_cdf_data:
+            # temporary artifact while refactoring code
+            delta = 1.0 / steps
+            initial_delta = delta / initial_steps
+            if self.α >= 1.0:
+                start = 0.0
+            else:
+                start = fold_left(
+                    (self.pdf(n*initial_delta)*initial_delta for n in range(1, initial_steps+1)),
+                    lambda u, v: u + v,
+                    0.0,
+                ) - self.pdf(delta) * delta / 2.0
+
+            self._compute_numerical_cdf(steps = steps, initial_steps = initial_steps, start = start)
+
         if x <= 0:
             return 0.0
         elif x >= 1.0:
             return 1.0
 
-        return self._cdf.get()[floor(x * self._cdf_steps)]
+        return self._numerical_cdf_data.get()[floor(x * self._numerical_cdf_steps.get())]
 
     def __add__(self, other: Self) -> Self:
         """
