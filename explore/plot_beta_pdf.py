@@ -3,12 +3,12 @@
 import matplotlib.pyplot as plt
 from boring_math.probability_distributions.distributions.beta import Beta
 
-a = 1/3
-b = 1/3
+a = 0.5
+b = 0.5
 
 beta = Beta(a, b)
 
-steps = 1000
+steps = 1024
 xs = [n/steps for n in range(steps+1)]
 ys = [beta.pdf(x) for x in xs]
 
@@ -30,7 +30,7 @@ for n in range(len(scatter_xs)):
 plt.title('CDF of Beta({{a}, {b})')
 plt.xlabel('x')
 plt.ylabel('F(x)')
-plt.ylim(-0.02, 1.02)
+plt.ylim(-0.02, 2.02)
 plt.grid(alpha=0.3)
 plt.show()
 
@@ -39,4 +39,4 @@ ds = [0.1, 0.5, 0.25, 0.125, 0.125/2, 0.125/4]
 ys = list(map(beta.cdf, xs))
 
 for ii in range(6):
-    print(ys[ii]*ds[ii])
+    print(f'x = {ys[ii]},  val = {ys[ii]*ds[ii]}')

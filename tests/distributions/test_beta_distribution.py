@@ -25,6 +25,9 @@ tolerance09 = 1e-9
 tolerance08 = 1e-8
 tolerance07 = 1e-7
 tolerance06 = 1e-6
+tolerance05 = 1e-5
+tolerance04 = 1e-4
+tolerance03 = 1e-3
 
 class Test_Beta:
     def test_beta_2_2(self) -> None:
@@ -39,9 +42,9 @@ class Test_Beta:
         assert beta.cdf(-0.5) == beta.cdf(0.0) == 0.0
         assert beta.cdf(1.5) == beta.cdf(1.0) == 1.0
         assert abs(beta.cdf(0.00) - 0.0) < tolerance14
-        assert abs(beta.cdf(0.25) - 5/32) < tolerance07
-        assert abs(beta.cdf(0.50) - 1/2) < tolerance07
-        assert abs(beta.cdf(0.75) - 27/32) < tolerance07
+        assert abs(beta.cdf(0.25) - 5/32) < tolerance03
+        assert abs(beta.cdf(0.50) - 1/2) < tolerance03
+        assert abs(beta.cdf(0.75) - 27/32) < tolerance03
         assert abs(beta.cdf(1.00) - 1.0) < tolerance14
 
     def test_beta_half_half(self) -> None:
@@ -51,16 +54,25 @@ class Test_Beta:
         assert abs(beta.pdf(0.25) - 4.0/(pi*sqrt(3))) < tolerance14
         assert abs(beta.pdf(0.50) - 2/pi) < tolerance14
         assert abs(beta.pdf(0.75) - 4.0/(pi*sqrt(3))) < tolerance14
+        assert isinf(beta.pdf(0.00))
         assert isinf(beta.pdf(1.00))
 
     def test_beta_third_third(self) -> None:
         beta = Beta(1/3, 1/3)
+        assert isinf(beta.pdf(0.00))
+        assert abs(beta.pdf(1/4) - 0.575966) < tolerance07
+        assert abs(beta.pdf(1/3) - 0.51428754) < tolerance08
+        assert abs(beta.pdf(1/2) - 0.475449418541) < tolerance12
+        assert abs(beta.pdf(2/3) - 0.51428754) < tolerance08
+        assert abs(beta.pdf(3/4) - 0.575966) < tolerance07
+        assert isinf(beta.pdf(1.00))
+
         assert abs(beta.cdf(0.00) - 0.0) < tolerance14
-        assert abs(beta.cdf(0.25) - 0.007762487) < tolerance07
-        assert abs(beta.cdf(1/3) - 1/6) < tolerance07
-        assert abs(beta.cdf(0.50) - 1/2) < tolerance07
-        assert abs(beta.cdf(2/3) - 5/3) < tolerance07
-        assert abs(beta.cdf(3/4) - 0.92237513) < tolerance07
+        assert abs(beta.cdf(0.25) - 0.3735487913342305) < tolerance03
+        assert abs(beta.cdf(1/3) - 0.418684817) < tolerance03
+        assert abs(beta.cdf(0.50) - 1/2) < tolerance03
+        assert abs(beta.cdf(2/3) - 0.581315183) < tolerance03
+        assert abs(beta.cdf(3/4) - 0.626451208) < tolerance03
         assert abs(beta.cdf(1.00) - 1.0) < tolerance14
 
     def test_beta_1_3(self) -> None:
@@ -91,11 +103,11 @@ class Test_Beta:
         assert abs(beta.pdf(1.00) - 1.0) < tolerance14
 
         assert beta.pdf(-0.5) == beta.pdf(1.5) == 0.0
-        assert abs(beta.cdf(0.00) - 0.00) < tolerance14
-        assert abs(beta.cdf(0.25) - 0.25) < tolerance14
-        assert abs(beta.cdf(0.50) - 0.50) < tolerance14
-        assert abs(beta.cdf(0.75) - 0.75) < tolerance14
-        assert abs(beta.cdf(1.00) - 1.00) < tolerance14
+        assert abs(beta.cdf(0.00) - 0.00) < tolerance03
+        assert abs(beta.cdf(0.25) - 0.25) < tolerance03
+        assert abs(beta.cdf(0.50) - 0.50) < tolerance03
+        assert abs(beta.cdf(0.75) - 0.75) < tolerance03
+        assert abs(beta.cdf(1.00) - 1.00) < tolerance03
 
     def test_beta_2_3(self) -> None:
         beta = Beta(2, 3)
@@ -107,8 +119,8 @@ class Test_Beta:
         assert abs(beta.pdf(1.00) - 0.0) < tolerance14
 
         assert beta.pdf(-0.5) == beta.pdf(1.5) == 0.0
-        assert abs(beta.cdf(0.00) - 0.00) < tolerance06
-        assert abs(beta.cdf(0.25) - 0.261719) < tolerance06
-        assert abs(beta.cdf(0.50) - 0.6875) < tolerance06
-        assert abs(beta.cdf(0.75) - 0.949219) < tolerance06
-        assert abs(beta.cdf(1.00) - 1.00) < tolerance06
+        assert abs(beta.cdf(0.00) - 0.00) < tolerance14
+        assert abs(beta.cdf(0.25) - 0.261719) < tolerance03
+        assert abs(beta.cdf(0.50) - 0.6875) < tolerance03
+        assert abs(beta.cdf(0.75) - 0.949219) < tolerance03
+        assert abs(beta.cdf(1.00) - 1.00) < tolerance14

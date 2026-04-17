@@ -26,13 +26,27 @@ Providing base classes to visualize probability distributions.
 """
 
 from abc import ABC, abstractmethod
+from math import isinf, floor
 from typing import Self
 from pythonic_fp.fptools.maybe import MayBe
-from pythonic_fp.iterables.folding import accumulate
+from pythonic_fp.iterables.folding import accumulate, fold_left
 from .datasets import DataSet
 
 __all__ = ['ContDist', 'DiscreteDist']
 
+tolerance14 = 1.0E-14
+tolerance13 = 1.0E-13
+tolerance12 = 1.0E-12
+tolerance11 = 1.0E-11
+tolerance10 = 1.0E-10
+tolerance09 = 1.0E-9
+tolerance08 = 1.0E-8
+tolerance07 = 1.0E-7
+tolerance06 = 1.0E-6
+tolerance05 = 1.0E-5
+tolerance04 = 1.0E-4
+tolerance03 = 1.0E-3
+tolerance02 = 1.0E-2
 
 class ContDist(ABC):
     """Base class to visualize continuous probability distributions."""
@@ -77,10 +91,28 @@ class ContDist(ABC):
     ) -> None:
         self._numerical_cdf_steps = MayBe(steps)
         delta = (stop-start)/steps
+        initial_cdf = 0.0
+        initial_step = 0
+
+        if isinf(self.pdf(start)):
+            dt = delta/2.0
+            while self.pdf(start + dt)*dt > tolerance03:
+                dt /= 2
+
+            initial_steps = floor(delta/dt)
+
+            initial_cdf = fold_left(
+                ((self.pdf(start + (n-1)*dt) + self.pdf(start + n*dt))*dt/2.0 for n in range (2, initial_steps+1)),
+                lambda u, v: u + v,
+                self.pdf(start+dt/2)*dt
+            )
+
+            initial_step = 2
 
         self._numerical_cdf_data = MayBe(tuple(accumulate(
-            ((self.pdf(start+(n-1)*delta) + self.pdf(start+n*delta))*delta/2.0 for n in range(1, steps+1)),
+            ((self.pdf(start + (n-1)*delta) + self.pdf(start + n*delta))*delta/2.0 for n in range(initial_step, steps+1)),
             lambda u, v: u + v,
+            initial_cdf,
         )))
 
 
