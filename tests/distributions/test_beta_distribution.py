@@ -24,6 +24,7 @@ tolerance10 = 1e-10
 tolerance09 = 1e-9
 tolerance08 = 1e-8
 tolerance07 = 1e-7
+tolerance06 = 1e-6
 
 class Test_Beta:
     def test_beta_2_2(self) -> None:
@@ -95,3 +96,19 @@ class Test_Beta:
         assert abs(beta.cdf(0.50) - 0.50) < tolerance14
         assert abs(beta.cdf(0.75) - 0.75) < tolerance14
         assert abs(beta.cdf(1.00) - 1.00) < tolerance14
+
+    def test_beta_2_3(self) -> None:
+        beta = Beta(2, 3)
+        assert beta.pdf(-0.5) == beta.pdf(1.5) == 0.0
+        assert abs(beta.pdf(0.00) - 0.0) < tolerance14
+        assert abs(beta.pdf(0.25) - 1.6875) < tolerance14
+        assert abs(beta.pdf(0.50) - 1.5) < tolerance14
+        assert abs(beta.pdf(0.75) - 0.5625) < tolerance14
+        assert abs(beta.pdf(1.00) - 0.0) < tolerance14
+
+        assert beta.pdf(-0.5) == beta.pdf(1.5) == 0.0
+        assert abs(beta.cdf(0.00) - 0.00) < tolerance06
+        assert abs(beta.cdf(0.25) - 0.261719) < tolerance06
+        assert abs(beta.cdf(0.50) - 0.6875) < tolerance06
+        assert abs(beta.cdf(0.75) - 0.949219) < tolerance06
+        assert abs(beta.cdf(1.00) - 1.00) < tolerance06

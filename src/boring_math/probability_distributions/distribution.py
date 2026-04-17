@@ -79,7 +79,7 @@ class ContDist(ABC):
         delta = (stop-start)/steps
 
         self._numerical_cdf_data = MayBe(tuple(accumulate(
-            (self.pdf(start + (n-0.5)*delta)*delta for n in range(1, steps)),
+            ((self.pdf(start+(n-1)*delta) + self.pdf(start+n*delta))*delta/2.0 for n in range(1, steps+1)),
             lambda u, v: u + v,
         )))
 
