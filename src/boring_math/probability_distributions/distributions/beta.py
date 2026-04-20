@@ -19,7 +19,6 @@
 from math import floor, inf
 from typing import final, Self
 
-# import matplotlib.pyplot as plt
 # from ..datasets import DataSet
 from boring_math.special_functions.gamma_family.beta import beta_real
 from ..distribution import ContDist
@@ -47,9 +46,14 @@ class Beta(ContDist):
 
         .. note::
 
-            There is no closed form for a beta distribution's CDF for
-            all ``α, β > 0``. To provide a CDf, the PDF is numerically
-            integrated.
+            There is no simple closed form formula the CDF valid
+            for all ``α, β > 0``. To provide a CDF the PDF is
+            numerically integrated by the parent class.
+
+            .. admonition:: TODO
+
+                Implement a CDF using using the Incomplete Beta Function
+                once one is implemented in boring-math-special-functions.
 
     """
 
