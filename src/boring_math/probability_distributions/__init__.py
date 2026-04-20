@@ -21,26 +21,24 @@ Probability Distributions
     Distributions can be compared to either sample or population
     data. Package originally derived from a Udacity exercise.
 
-.. note::
+    .. admonition:: Package Overview
 
-    **Package overview:**
+        - boring_math.probability_distributions.dataset
 
-    - boring_math.probability_distributions.dataset
+          - Class **Dataset**
 
-      - Class **Dataset**
+            - contains either sample or population data
+            - generates sample/population statistics
 
-        - contains either sample or population data
-        - generates sample/population statistics
+        - boring_math.probability_distributions.distribution
 
-    - boring_math.probability_distributions.distribution
+          - Abstract Class **Distribution**
 
-      - Abstract Class **Distribution**
+            - represents a probability distribution
 
-        - represents a probability distribution
+        - boring_math.probability_distributions.distributions
 
-      - bm.probability_distributions.distributions
-
-        - Concrete **Distributions**
+            - Concrete **Distributions**
 
 """
 

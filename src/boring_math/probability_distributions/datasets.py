@@ -16,14 +16,24 @@
 # Udacity® (https://www.udacity.com/)
 #
 
-"""Module for managing sample/population data
+"""
+Managing Data
+-------------
 
-- *class* DataSet: contains sample or population data
-- *class* DataSets: base class for managing data sets
+.. admonition:: Managing sample/population data
+
+    - Class **DataSet**
+
+      - contains a single sample or population data
+
+    - Class **DataSets**
+
+      - base class for managing multiple data sets
 
 """
 
 import math
+import sys
 from collections.abc import Iterator
 from typing import final, Never, Self
 from pythonic_fp.fptools.maybe import MayBe
@@ -33,30 +43,42 @@ __all__ = ['DataSet', 'DataSets']
 
 @final
 class DataSet:
-    """Class containing sample or population data.
+    """
+    .. admonition:: Class containing a finite set of data
 
-    - all data internally stored as floats (even integer data)
-    - data sorted smallest to largest
-    - methods provided to
+        Data can be a sample or the population.
 
-      - read in data from a file
-      - computing data statistics
-      - add or remove data
+        - all data internally stored as floats (even integer data)
+        - data sorted smallest to largest
+        - methods provided to
+
+            - read in data from a file
+            - computing data statistics
+            - add or remove data
 
     """
 
     @classmethod
-    def read_data_from_file(cls, file_name: str, sample: bool = False) -> MayBe[Self]:
-        """Read in data from a text file, return a DataSet object.
+    def read_data_from_file(cls, file_name: str, sample: bool = False) -> Self:
+        """
+        .. admonition:: Create data set from data file
 
-        The text file should
+            Read in data from a text file, calculate some statistics,
+            and return a DataSet object. Fail fast if there is a problem
+            with the data file.
 
-        - have one number (float) per line and calculate statistics
+            The text file should
 
-          - if sample is true (default), calculate sample stats
-          - if sample is false, calculate population stats
+            - have one number (float) per line
 
-        - blank lines and lines beginning with '#' are ignored
+                - if sample is true, calculate sample stats
+                - if sample is false (default), calculate population stats
+
+            - blank lines and lines beginning with '#' are ignored
+
+        :param file_name: Path to file from which to read in data.
+        :param sample: If true treat data as a sample.
+        :returns: A ``DataSet`` object containing the data from the file.
 
         """
         data: list[float] = []
@@ -69,18 +91,14 @@ class DataSet:
                         line = file.readline()
                     else:
                         line = file.readline()
-        except ValueError as exc:
-            raise RuntimeError('Error parsing "{}"'.format(file_name)) from exc
-        except FileNotFoundError as exc:
-            raise RuntimeError(
-                'Can\'t find file data file "{}"'.format(file_name)
-            ) from exc
-        except PermissionError as exc:
-            raise RuntimeError(
-                'No read permissiona for data file "{}"'.format(file_name)
-            ) from exc
+        except FileNotFoundError:
+            sys.exit(f'Error: Cannot find data file "{file_name}"')
+        except PermissionError:
+            sys.exit(f'Error: No read permissiona for data file "{file_name}"')
+        except ValueError:
+            sys.exit(f'Error: Problems parsing data file "{file_name}"')
         else:
-            return MayBe(DataSet(*data, sample=sample))
+            return DataSet(*data, sample=sample)
 
     def __init__(self, *data: int | float, sample: bool = False) -> None:
         self._sample: bool = sample
@@ -203,15 +221,18 @@ class DataSet:
 
 
 class DataSets:
-    """Base class for managing data sets.
+    """
+    .. admonition:: Class to manage data sets.
 
-    - data sets can be samples or populations
-    - methods provided to
+        Base class for managing ``DataSet`` objects.
 
-      - add or remove data sets
-      - plot data sets
+        - data sets can be samples or populations
+        - child class should provide methods to
 
-    - how they are related to each other is up to the user of the class
+          - add or remove data sets
+          - plot data sets
+
+        - how data sets relate to each other is up to the child class
 
     """
 
