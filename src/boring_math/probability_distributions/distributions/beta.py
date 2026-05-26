@@ -75,8 +75,8 @@ class Beta(ContDist):
 
             Beta probability distribution function.
 
-        :param x: ``x ∈ [0, 1]``
-        :returns: Value of the PDF at ``x``, ``0,0`` if outside domain.
+            :param x: x ∈ [0, 1]
+            :returns: Value of the PDF at x, 0.0 if outside domain.
 
         """
         if x < 0 or x > 1:
@@ -106,8 +106,8 @@ class Beta(ContDist):
                 a beta distribution's CDF. To provide a CDf, the PDF is
                 numerically integrated.
 
-        :param x: Where ``x`` is an element of the sample space.
-        :returns: CDF at ``x`` obtained by numerically integrated the PDF.
+            :param x: Where x is an element of the sample space.
+            :returns: CDF at x obtained by numerically integrated the PDF.
 
         """
         steps = 2048
@@ -129,11 +129,11 @@ class Beta(ContDist):
             Beta distributions are not stable, thus the sum of two
             random beta distributed variables is not Beta distributed.
 
-        :param other: Another Beta distribution class instance.
-        :returns: Never returns, Beta distributions are not stable.
-        :raises ValueError: If Beta distributions are added.
-        :raises TypeError: If a Beta distributions is added to another
-                           type of probability distribution class.
+            :param other: Another Beta distribution class instance.
+            :returns: Never returns, Beta distributions are not stable.
+            :raises ValueError: If Beta distributions are added.
+            :raises TypeError: If a Beta distributions is added to another
+                               type of probability distribution class.
 
         """
         if type(other) is Beta:

@@ -16,14 +16,6 @@
 # Udacity® (https://www.udacity.com/)
 #
 
-"""
-Poisson Distribution
---------------------
-
-A Poisson distribution class.
-
-"""
-
 from typing import final, Self
 from math import floor, factorial as fac, sqrt
 import matplotlib.pyplot as plt
@@ -36,22 +28,32 @@ __all__ = ['Poisson']
 
 @final
 class Poisson(DiscreteDist):
-    """Class for visualizing Poisson distributed data.
+    """
+    .. admonition:: Class for visualizing Poisson distributed data
 
-    A Poisson distribution that expresses the probability of a given number of events
-    occurring in a fixed interval of time if these events occur with a known constant
-    mean rate and independently of the time since the last event.
+        A Poisson distribution that expresses the probability of a given
+        number of events occurring in a fixed interval usually time. If
+        these events occur with a known constant mean rate and
+        independently of the last event.
 
-    Attributes (some inherited):
+        Radioactive decay is an example.
 
-    - ``mean`` (float) representing the mean value of the distribution
-    - ``stdev`` (float) representing the standard deviation of the distribution
-    - ``data``  extracted from a data file (taken to be a population)
-    - ``λ`` (float) number of events in an interval
+        Attributes (some inherited):
+
+        - **mean** (float) representing the mean value of the distribution
+        - **stdev** (float) representing the standard deviation of the distribution
+        - **data**  extracted from a data file (taken to be a population)
+        - **λ** (float) number of expected events in an interval
 
     """
 
     def __init__(self, λ: float = 1.0):
+        """
+        .. admonition:: init
+
+            :param λ: Number of events in an interval.
+
+        """
         if (λ <= 0.0):
             msg = 'For a Poisson distribution, λ is assumed positive'
             raise ValueError(msg)
@@ -63,7 +65,12 @@ class Poisson(DiscreteDist):
         super().__init__()
 
     def pdf(self, kf: float) -> float:
-        """Poisson probability distribution function."""
+        """
+        .. admonition:: PDF
+
+            Poisson probability distribution function.
+
+        """
         k = floor(kf)
         λ = self.λ
         if k < 0:
@@ -71,23 +78,42 @@ class Poisson(DiscreteDist):
         return λ**k * exp(-λ) / fac(k)
 
     def cdf(self, kf: float) -> float:
-        """Binomial cumulative probability distribution function."""
+        """
+        .. admonition:: CDF
+
+            Poisson cumulative probability distribution function.
+
+        """
         return sum((self.pdf(ii) for ii in range(0, floor(kf)+1)))
 
     def calculate_mean(self) -> float:
-        """Calculate the mean from λ."""
+        """
+        .. admonition:: Mean
+
+            Calculate the mean from λ.
+
+        """
         self.mean = mean = self.λ
         return mean
 
     def calculate_stdev(self) -> float:
-        """Calculate the standard deviation using ``λ``."""
+        """
+        .. admonition:: Std Dev
+
+            Calculate the standard deviation from λ.
+
+        """
         self.stdev = stdev = sqrt(self.λ)
         return stdev
 
     def replace_stats_from_dataset(self, dset: DataSet) -> float:
-        """Function to calculate p and n from a data set.
+        """
+        .. admonition:: Replace stats
 
-        Where the read in data set is taken as the population.
+            Method to calculate p and n from a data set.
+
+            Where the read in data set is taken as the population.
+
         """
         if dset:
             self.n = n = dset._size
@@ -99,7 +125,12 @@ class Poisson(DiscreteDist):
         return self.λ
 
     def plot_bar_data(self) -> None:
-        """Produce a bar-graph of the data using the matplotlib pyplot library."""
+        """
+        .. admonition:: Plot bar data
+
+            Produce a bar-graph of the data using the matplotlib pyplot library.
+
+        """
         n = self.n
         p = self.λ
 
@@ -111,13 +142,14 @@ class Poisson(DiscreteDist):
         plt.show()
 
     def plot_bar_pdf(self) -> tuple[list[int], list[float]]:
-        """Function to plot the pdf of the binomial distribution.
+        """
+        ..admonition:: Plot the pdf of the distribution
 
-        :return:
-            A tuple containing
+            :returns:
+                A tuple containing
 
-            - list[int]: x values used for the pdf plot
-            - list[float]: y values used for the pdf plot
+                - list[int]: x values used for the pdf plot
+                - list[float]: y values used for the pdf plot
 
         """
 
@@ -136,14 +168,18 @@ class Poisson(DiscreteDist):
         return xs, ys
 
     def __add__(self, other: Self) -> Self:
-        """Add together two Poisson distributions.
+        """
+        .. admonition:: add
 
-        Poisson distributions are closed but not stable, thus if two independent random
-        variables ``X₁`` and ``X₂`` are Poisson distributed then ``X₁ + X₂`` is Poisson
-        distributed with ``λ = λ₁ + λ₂``. Unlike the Normal distribution, Poisson
-        distributed random variables do not scale. That is ``aX₁ + bX₂`` is not Poisson
-        unless both ``a`` and ``b`` are 1, or one is ``1`` and the other is ``0``.
+            Add together two Poisson distributions.
 
+            Poisson distributions are closed but not stable, thus if
+            two independent random variables X₁ and X₂ are Poisson
+            distributed then ``X₁ + X₂`` is Poisson distributed with
+            ``λ = λ₁ + λ₂``. Unlike the Normal distribution, Poisson
+            distributed random variables do not scale. That is
+            ``aX₁ + bX₂`` is not Poisson unless both a and b are 1, or
+            one is 1 and the other is 0.
 
         """
         if type(other) is not Poisson:
@@ -154,11 +190,27 @@ class Poisson(DiscreteDist):
         return Poisson(self.λ + other.λ)
 
     def __repr__(self) -> str:
+        """
+        .. admonition:: repr string
+
+            :returns: The string 'Poisson(λ)' where λ is the number of
+                      expected events in an interval.
+
+        """
         repr_str = 'Poisson({})'
         return repr_str.format(self.λ)
 
     def __str__(self) -> str:
-        user_str = 'mean {}, standard deviation {}, λ {}'
+        """
+        .. admonition:: user string
+
+            :returns: The string 'mean λ, standard deviation σ, lambda λ'
+                      where λ is the number of expected events in an
+                      interval and σ is the std deviation of the
+                      distribution.
+
+        """
+        user_str = 'mean {}, standard deviation {}, lambda {}'
         return user_str.format(self.mean, self.stdev, self.λ)
 
     def plot_pdf_bar_graph(

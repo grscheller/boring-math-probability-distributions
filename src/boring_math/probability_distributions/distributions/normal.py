@@ -27,12 +27,12 @@ __all__ = ['Normal']
 
 @final
 class Normal(ContDist):
-    """Class for visualizing Normal distributions.
+    """
+    .. admonition:: Class for visualizing Normal distributions
 
-    .. note::
-
-        The Normal, also called Gaussian, distribution is a continuous probability
-        distribution with probability density function
+        The Normal, also called Gaussian, distribution is a
+        continuous probability distribution with probability
+        density function
 
         ``f(x) = (1/√(2πσ²))exp(-(x-μ)²/2σ²)``
 
@@ -44,6 +44,13 @@ class Normal(ContDist):
     """
 
     def __init__(self, mu: float = 0.0, sigma: float = 1.0):
+        """
+        .. admonition:: init
+
+            :param mu: The mean of the normal distribution.
+            :param sigma: The std deviation of the normal distribution.
+
+        """
         if sigma <= 0:
             msg = 'For a Normal distribution, σ must be greater than 0'
             raise ValueError(msg)
@@ -55,8 +62,10 @@ class Normal(ContDist):
 
     def __repr__(self) -> str:
         """
-        :returns: The string ``Normal(μ, σ)`` where ``μ`` is the mean
-                  and ``σ`` is the std deviation of the distribution.
+        .. admonition:: repr string
+
+            :returns: The string 'Normal(μ, σ)' where μ is the mean
+                      and σ is the std deviation of the distribution.
 
         """
         repr_str = 'Normal({}, {})'
@@ -64,13 +73,15 @@ class Normal(ContDist):
 
     def __str__(self) -> str:
         """
-        :returns: The string ``Normal(mu=μ, sigma=σ)`` where ``μ``
-                  is the mean and ``σ`` is the std deviation of
-                  the distribution.
+        .. admonition:: user string
+
+            :returns: The string 'Normal(mu=μ, sigma=σ)' where μ
+                      is the mean and σ is the std deviation of
+                      the distribution.
 
         """
-        repr_str = 'Normal(mu={}, sigma={})'
-        return repr_str.format(self.μ, self.σ)
+        user_str = 'Normal(mu={}, sigma={})'
+        return user_str.format(self.μ, self.σ)
 
     def pdf(self, x: float) -> float:
         """
@@ -78,8 +89,8 @@ class Normal(ContDist):
 
             Normal probability distribution function.
 
-        :param x: ``x ∈ [-∞, ∞]``
-        :returns: Value of the PDF at ``x``
+            :param x: x ∈ [-∞, ∞]
+            :returns: Value of the PDF at x.
 
         """
         c = 1.0 / sqrt(2 * pi)
@@ -89,16 +100,29 @@ class Normal(ContDist):
 
     def cdf(self, x: float) -> float:
         """Normal cumulative probability distribution function."""
+        """
+        .. admonition:: Normal CDF
+
+            Normal cumulative probability distribution function.
+
+            :param x: x ∈ [-∞, ∞]
+            :returns: Value of the PDF at x.
+
+        """
         μ = self.μ
         c = self.σ * sqrt(2)
         return 0.5 * (1 + erf((x - μ)/c))
 
     def __add__(self, other: Self|float) -> Self:
-        """Add together two Normal distributions.
+        """
+        .. admonition:: add
 
-        Normal distributions are stable, thus if two independent random variables
-        ``X₁`` and ``X₂`` are Normally distributed then ``aX₁ + bX₂`` is also
-        Normally distributed with ``μ = μ₁ + μ₂`` and ``σ² = a²σ₁² + b²σ₂²``.
+            Add together two Normal distributions.
+
+            Normal distributions are stable, thus if two independent
+            random variables X₁ and X₂ are normally distributed
+            then ``aX₁ + bX₂`` is also a normally distributed
+            with ``μ = μ₁ + μ₂`` and ``σ² = a²σ₁² + b²σ₂²``.
 
         """
         if type(other) is float:
@@ -112,7 +136,12 @@ class Normal(ContDist):
         return Normal(self.μ + other.μ, sqrt((self.σ)**2 + (other.σ)**2))
 
     def __mul__(self, factor: float) -> Self:
-        """Scale Normal distribution by a non-zero factor."""
+        """
+        .. admonition:: mul
+
+            Scale Normal distribution by a non-zero factor.
+
+        """
         if factor > 0:
             return Normal(self.μ, abs(factor) * self.σ)
         elif factor < 0:
@@ -122,7 +151,12 @@ class Normal(ContDist):
             raise TypeError(msg)
 
     def __rmul__(self, factor: float) -> Self:
-        """Scale Normal distribution by a non-zero factor."""
+        """
+        .. admonition:: rmul
+
+            Scale Normal distribution by a non-zero factor.
+
+        """
         if factor > 0:
             return Normal(self.μ, abs(factor) * self.σ)
         elif factor < 0:

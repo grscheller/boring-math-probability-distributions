@@ -16,15 +16,15 @@
 # Udacity® (https://www.udacity.com/)
 #
 
-"""Module boring_math.probability_distributions.distribution
+"""
+.. admonition:: Probability distribution base classes
 
-Providing base classes to visualize probability distributions.
+    Providing base classes to visualize probability distributions.
 
-- *class* ContDist: base class to visualize continuous pd
-- *class* DiscreteDist: base class to visualize discrete pd
+    - *class* **ContDist**: base class to visualize continuous pd
+    - *class* **DiscreteDist**: base class to visualize discrete pd
 
 """
-
 from abc import ABC, abstractmethod
 from math import isinf, floor
 from typing import Self
@@ -49,9 +49,20 @@ tolerance03 = 1.0E-3
 tolerance02 = 1.0E-2
 
 class ContDist(ABC):
-    """Base class to visualize continuous probability distributions."""
+    """
+    .. admonition:: Continuous distribution base class
+
+        Base class to visualize continuous probability distributions.
+
+    """
 
     def __init__(self) -> None:
+        """
+        .. admonition:: init
+
+            Initialize storage containers for data.
+
+        """
         self.population: MayBe[DataSet] = MayBe()
         self.samples: list[DataSet] = []
 
@@ -60,19 +71,13 @@ class ContDist(ABC):
         self._numerical_cdf_steps: MayBe[int] = MayBe()
 
     @abstractmethod
-    def pdf(self, kf: float) -> float:
-        """Probability distribution function."""
-        ...
+    def pdf(self, kf: float) -> float: ...
 
     @abstractmethod
-    def cdf(self, kf: float) -> float:
-        """Cumulative distribution function."""
-        ...
+    def cdf(self, kf: float) -> float: ...
 
     @abstractmethod
-    def __add__(self, other: Self) -> Self:
-        """Add together two compatible distributions."""
-        ...
+    def __add__(self, other: Self) -> Self: ...
 
     def _compute_cdf_jump(
         self,
@@ -117,9 +122,20 @@ class ContDist(ABC):
 
 
 class DiscreteDist(ABC):
-    """Base class to visualize discrete probability distributions."""
+    """
+    .. admonition:: Discrete distribution base class
+
+        Base class to visualize discrete probability distributions.
+
+    """
 
     def __init__(self) -> None:
+        """
+        .. admonition:: init
+
+            Initialize storage containers for data.
+
+        """
         self.population: MayBe[DataSet] = MayBe()
         self.samples: list[DataSet] = []
 

@@ -27,9 +27,8 @@ __all__ = ['Uniform']
 
 @final
 class Uniform(ContDist):
-    """Class for visualizing Normal distributions.
-
-    .. note::
+    """
+    .. admonition:: Class for visualizing Uniform distributions
 
         The Uniform distribution is a continuous probability
         distribution with probability density function
@@ -59,11 +58,35 @@ class Uniform(ContDist):
         super().__init__()
 
     def __repr__(self) -> str:
-        repr_str = 'mean {}, standard deviation {}'
-        return repr_str.format(self.mu, self.sigma)
+        """
+        .. admonition:: repr string
+
+            :returns: The string 'Uniform(λ)' where λ is the number of
+                      expected events in an interval.
+
+        """
+        repr_str = 'Uniform({}, {})'
+        return repr_str.format(self.a, self.b)
+
+    def __str__(self) -> str:
+        """
+        .. admonition:: user string
+
+            :returns: The string
+                      'Uniform: mean mu, standard deviation σ, start a, end b'
+                      where mu is the mean and σ is the std deviation.
+
+        """
+        user_str = 'Uniform: mean {}, standard deviation {}, start {}, end {}'
+        return user_str.format(self.mu, self.sigma, self.a, self.b)
 
     def pdf(self, x: float) -> float:
-        """Uniform probability distribution function."""
+        """
+        .. admonition:: PDF
+
+            Uniform probability distribution function.
+
+        """
         a = self.a
         b = self.b
         c = 1.0 / (b - a)
@@ -73,7 +96,12 @@ class Uniform(ContDist):
             return 0
 
     def cdf(self, x: float) -> float:
-        """Uniform cumulative probability distribution function."""
+        """
+        .. admonition:: CDF
+
+            Uniform cumulative distribution function.
+
+        """
         a = self.a
         b = self.b
         c = 1.0 / (b - a)

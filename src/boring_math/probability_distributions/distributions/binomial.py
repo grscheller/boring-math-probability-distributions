@@ -16,14 +16,6 @@
 # Udacity® (https://www.udacity.com/)
 #
 
-"""
-Binomial Distribution
----------------------
-
-A binomial distribution class, derived from a Udacity
-exercise template.
-
-"""
 from typing import final, Self
 from math import comb, floor, sqrt
 import matplotlib.pyplot as plt
@@ -35,22 +27,30 @@ __all__ = ['Binomial']
 
 @final
 class Binomial(DiscreteDist):
-    """Class for visualizing Binomial distributed data.
+    """
+    .. admonition:: Class for visualizing Binomial distributed data.
 
-    A Binomial distribution represents the number of events with
-    probability ``p`` happening in ``n`` numbers of trials.
+        A Binomial distribution represents the number of events with
+        probability ``p`` happening in ``n`` numbers of trials.
 
-    Attributes (some inherited):
+        Attributes (some inherited):
 
-    - ``mean`` (float) representing the mean value of the distribution
-    - ``stdev`` (float) representing the standard deviation of the distribution
-    - ``data``  extracted from a data file (taken to be a population)
-    - ``p`` (float) representing the probability of an event occurring
-    - ``n`` (int) the total number of trials
+        - **mean** (float) representing the mean value of the distribution
+        - **stdev** (float) representing the standard deviation of the distribution
+        - **data**  extracted from a data file (taken to be a population)
+        - **p** (float) representing the probability of an event occurring
+        - **n** (int) the total number of trials
 
     """
 
     def __init__(self, p: float = 0.5, n: int = 20):
+        """
+        .. admonition:: init
+
+            :param p: Probability of success.
+            :param n: Number of trials.
+
+        """
         if not (0.0 <= p <= 1.0) or n < 0:
             msg1 = 'Binomial: For a Binomial distribution, '
             msg2 = msg3 = ''
@@ -70,18 +70,33 @@ class Binomial(DiscreteDist):
         super().__init__()
 
     def pdf(self, kf: float) -> float:
-        """Binomial probability distribution function."""
+        """
+        .. admonition:: PDF
+
+            Binomial probability distribution function.
+
+        """
         k = int(kf)
         n = self.n
         p = self.p
         return comb(n, k) * (p**k) * (1 - p) ** (n - k)
 
     def cdf(self, kf: float) -> float:
-        """Binomial cumulative probability distribution function."""
+        """
+        .. admonition:: CDF
+
+            Cumulative binomial probability distribution function.
+
+        """
         return sum((self.pdf(ii) for ii in range(floor(kf)+1)))
 
     def calculate_mean(self) -> float:
-        """Calculate the mean from p and n"""
+        """
+        .. admonition:: mean
+
+            Calculate the mean from p and n.
+
+        """
         n = self.n
         p = self.p
         self.mean = mean = n * p
@@ -89,15 +104,24 @@ class Binomial(DiscreteDist):
 
     def calculate_stdev(self) -> float:
         """Calculate the standard deviation using p and n"""
+        """
+        .. admonition:: std deviation
+
+            Calculate the standard deviation from p and n.
+
+        """
         n = self.n
         p = self.p
         self.stdev = stdev = sqrt(n * p * (1 - p))
         return stdev
 
     def replace_stats_from_dataset(self, dset: DataSet) -> tuple[float, int]:
-        """Function to calculate p and n from a data set.
+        """
+        .. admonition:: Replace stats from dataset
 
-        Where the read in data set is taken as the population.
+            Function to calculate p and n from a data set, taken as
+            a population.
+
         """
         if dset:
             self.n = n = dset._size
@@ -107,7 +131,12 @@ class Binomial(DiscreteDist):
         return self.p, self.n
 
     def plot_bar_data(self) -> None:
-        """Produce a bar-graph of the data using the matplotlib pyplot library."""
+        """
+        .. admonition:: Plat bar graph
+
+            Produce a bar-graph of the data using the matplotlib pyplot library.
+
+        """
         n = self.n
         p = self.p
 
@@ -125,14 +154,17 @@ class Binomial(DiscreteDist):
         lower_cap: int | None = None,
         upper_cap: int | None = None,
     ) -> tuple[list[int], list[float]]:
-        """Function to plot the pdf of the binomial distribution.
+        """
+        .. admonition:: Plat pdf bar graph
 
-        :param show: If False suppress printing the bar graph, useful in pytest test suite.
-        :param lower_cap: Put a lower cap on the values printed.
-        :param upper_cap: Put an upper cap on the values printed.
-        :returns: A ``tuple[list[int], list[float]]`` where
-                  ``list[int]`` are the ``x`` values used for the bar graph and
-                  ``list[float]`` are the corresponding probabilities for each ``x``.
+            Function to plot the pdf of the binomial distribution.
+
+            :param show: If False suppress printing the bar graph, useful in pytest test suite.
+            :param lower_cap: Put a lower cap on the values printed.
+            :param upper_cap: Put an upper cap on the values printed.
+            :returns: A tuple[list[int], list[float]] where
+                      list[int] are the x values used for the bar graph and
+                      list[float] are the corresponding probabilities for each x.
 
         """
         def pdf(ii: int) -> float:
@@ -164,7 +196,12 @@ class Binomial(DiscreteDist):
         return xs, ys
 
     def __add__(self, other: Self) -> Self:
-        """Add together two Binomial distributions with equal p."""
+        """
+        .. admonition:: add
+
+            Add together two Binomial distributions with equal p.
+
+        """
         if type(other) is not Binomial:
             msg = 'A Binomial distribution cannot be added to a {}'
             msg = msg.format(type(other))
@@ -176,10 +213,21 @@ class Binomial(DiscreteDist):
         return Binomial(self.p, self.n + other.n)
 
     def __repr__(self) -> str:
+        """
+        .. admonition:: repr string
+
+            :returns: A string to reproduce the distribution.
+
+        """
         repr_str = 'Binomial({}, {})'
         return repr_str.format(self.p, self.n)
 
     def __str__(self) -> str:
+        """
+        .. admonition:: user string
+
+            :returns: A string meaningful to an end user.
+
+        """
         user_str = 'mean {}, standard deviation {}, p {}, n {}'
         return user_str.format(self.mean, self.stdev, self.p, self.n)
-
