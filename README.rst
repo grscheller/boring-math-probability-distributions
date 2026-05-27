@@ -5,7 +5,7 @@ PyPI project
 `boring-math-probability-distributions
 <https://pypi.org/project/boring-math-probability-distributions>`_.
 
-Package to generate and visualize probability distributions.
+Generate and visualize probability distributions.
 
 - continuous distributions:
 
