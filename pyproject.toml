@@ -24,7 +24,7 @@ classifiers = [
 ]
 dependencies = [
   "matplotlib >= 3.10.1",
-  "pythonic-fp.fptools >= 5.1.1",
+  "pythonic-fp.fptools >= 5.4.0",
   "boring-math-special-functions >= 5.0.0",
 ]
 dynamic = ["description"]
