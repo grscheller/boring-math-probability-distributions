@@ -1,5 +1,5 @@
 boring-math-probability-distributions
--------------------------------------
+=====================================
 
 Project
 `boring-math-probability-distributions <https://pypi.org/project/boring-math-probability-distributions/>`_
@@ -7,7 +7,7 @@ one of the
 `Boring Math <https://grscheller.github.io/boring-math/>`_
 PyPI projects.
 
-**PyPI 1.0.0 release**
+|RELEASE_STRING|
 
 .. toctree::
     :caption: Overview
@@ -27,4 +27,4 @@ PyPI projects.
     :caption: API Documentation
     :maxdepth: 2
 
-    docs/index
+    api/index
