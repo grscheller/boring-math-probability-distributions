@@ -5,7 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "boring-math-probability-distributions"
 version = "1.0.1"
-readme = "README.rst"
+readme = "README.md"
 requires-python = ">=3.13"
 authors = [
   { name = "Geoffrey R. Scheller", email = "geoffrey@scheller.com" },
@@ -32,7 +32,7 @@ dependencies = [
 description = "Visualizing probability distributions."
 
 [project.urls]
-Changelog = "https://github.com/grscheller/boring-math-probability-distributions/blob/main/CHANGELOG.rst"
+Changelog = "https://github.com/grscheller/boring-math-probability-distributions/blob/main/CHANGELOG.md"
 Documentation = "https://grscheller.github.io/boring-math/homepage/build/html/projects/probability_distributions.html"
 Homepage = "https://grscheller.github.io/boring-math/homepage/build/html/"
 Source = "https://github.com/grscheller/boring-math-probability-distributions"
