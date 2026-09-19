@@ -33,6 +33,7 @@ description = "Visualizing probability distributions."
 
 [project.urls]
 Changelog = "https://github.com/grscheller/boring-math-probability-distributions/blob/main/CHANGELOG.md"
+Documentation ="https://grscheller.github.io/boring-math-probability-distributions/release/html/"
 Homepage = "https://grscheller.github.io/boring-math/homepage/build/html/"
 Source = "https://github.com/grscheller/boring-math-probability-distributions"
 
